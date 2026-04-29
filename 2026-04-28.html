@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relatório Diário Facebook Ads — 28/04/2026</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 0 0 40px;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── HEADER ── */
+    .header {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border-bottom: 1px solid #334155;
+      padding: 28px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .header-left h1 { font-size: 1.5rem; font-weight: 700; color: #f1f5f9; }
+    .header-left p  { font-size: 0.85rem; color: #94a3b8; margin-top: 4px; }
+    .badge {
+      background: #1e3a5f;
+      color: #60a5fa;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 99px;
+      border: 1px solid #2563eb44;
+      white-space: nowrap;
+    }
+
+    /* ── ERROR BANNER ── */
+    .error-banner {
+      margin: 28px 40px 0;
+      background: #1c1010;
+      border: 1.5px solid #ef444466;
+      border-radius: 12px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .error-banner .icon {
+      font-size: 1.6rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .error-banner .text h3 { color: #f87171; font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+    .error-banner .text p  { color: #fca5a5; font-size: 0.85rem; line-height: 1.5; }
+    .error-banner .text code {
+      background: #2d1515;
+      color: #fca5a5;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.82rem;
+    }
+
+    .container { padding: 28px 40px; max-width: 1400px; margin: 0 auto; }
+    .section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #64748b;
+      margin-bottom: 14px;
+      margin-top: 32px;
+    }
+
+    /* ── KPI GRID ── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 16px;
+    }
+    .kpi-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 14px 14px 0 0;
+    }
+    .kpi-card.blue::before   { background: #3b82f6; }
+    .kpi-card.green::before  { background: #10b981; }
+    .kpi-card.purple::before { background: #a855f7; }
+    .kpi-card.orange::before { background: #f97316; }
+    .kpi-card.yellow::before { background: #eab308; }
+    .kpi-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: #64748b; margin-bottom: 8px; }
+    .kpi-value { font-size: 1.55rem; font-weight: 800; color: #f1f5f9; }
+    .kpi-value.nd { color: #475569; }
+    .kpi-sub { font-size: 0.78rem; color: #64748b; margin-top: 4px; }
+
+    /* ── BALANCE TABLE ── */
+    .balance-list { display: flex; flex-direction: column; gap: 10px; }
+    .balance-row {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .balance-dot {
+      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    }
+    .balance-name { flex: 1; font-size: 0.9rem; font-weight: 600; color: #cbd5e1; }
+    .balance-value { font-size: 0.9rem; font-weight: 700; color: #64748b; }
+    .balance-pill {
+      font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 99px; text-transform: uppercase;
+    }
+    .pill-nd { background: #1e293b; border: 1px solid #475569; color: #64748b; }
+
+    /* ── ALERT CARDS ── */
+    .alerts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .alert-card {
+      background: #1e293b;
+      border: 1px solid;
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+    .alert-card.warn { border-color: #f59e0b66; }
+    .alert-card.info { border-color: #3b82f666; }
+    .alert-card.neutral { border-color: #334155; }
+    .alert-card .alert-icon { font-size: 1.3rem; margin-bottom: 8px; }
+    .alert-card h4 { font-size: 0.88rem; font-weight: 700; color: #f1f5f9; margin-bottom: 6px; }
+    .alert-card p  { font-size: 0.8rem; color: #94a3b8; line-height: 1.5; }
+
+    /* ── ACCOUNT CARDS ── */
+    .account-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+    .account-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 20px;
+      overflow: hidden;
+    }
+    .account-card-header {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+    }
+    .account-color-bar { width: 4px; border-radius: 4px; height: 36px; flex-shrink: 0; }
+    .account-card-header h3 { font-size: 1rem; font-weight: 700; color: #f1f5f9; }
+    .account-card-header p  { font-size: 0.72rem; color: #64748b; margin-top: 2px; }
+    .account-metrics { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+    .account-metric { flex: 1; min-width: 70px; }
+    .account-metric .lbl { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #64748b; }
+    .account-metric .val { font-size: 1rem; font-weight: 700; color: #94a3b8; margin-top: 2px; }
+    .chart-wrap { position: relative; height: 120px; }
+
+    /* ── CHARTS SECTION ── */
+    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 700px) { .charts-grid { grid-template-columns: 1fr; } }
+    .chart-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 20px;
+    }
+    .chart-card h3 { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #64748b; margin-bottom: 16px; }
+    .chart-card .chart-wrap { height: 200px; }
+
+    /* ── TABLE ── */
+    .table-wrap {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    thead tr { background: #0f172a; }
+    thead th {
+      padding: 12px 14px; text-align: left;
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .06em; color: #64748b;
+      border-bottom: 1px solid #334155;
+    }
+    tbody tr { border-bottom: 1px solid #1e293b; transition: background .12s; }
+    tbody tr:hover { background: #1a2540; }
+    tbody td { padding: 11px 14px; color: #94a3b8; vertical-align: middle; }
+    .td-account { display: flex; align-items: center; gap: 8px; }
+    .td-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .td-nd { color: #475569; font-style: italic; }
+    .td-bold { font-weight: 700; color: #e2e8f0; }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center;
+      padding: 24px 40px;
+      font-size: 0.75rem;
+      color: #475569;
+      border-top: 1px solid #1e293b;
+      margin-top: 40px;
+    }
+    .footer span { color: #64748b; }
+
+    @media (max-width: 640px) {
+      .header, .container { padding-left: 20px; padding-right: 20px; }
+      .error-banner { margin-left: 20px; margin-right: 20px; }
+      .charts-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <h1>Relatório Diário Facebook Ads — 28/04/2026</h1>
+    <p>VR Labs · 6 contas gerenciadas · Dados de ontem</p>
+  </div>
+  <div class="badge">Gerado em 29/04/2026</div>
+</div>
+
+<!-- ERROR BANNER -->
+<div class="error-banner">
+  <div class="icon">&#9888;</div>
+  <div class="text">
+    <h3>Dados indisponíveis — API Meta retornou erro 403</h3>
+    <p>
+      A Meta Marketing API retornou <code>Host not in allowlist</code> para todas as contas.
+      Isso indica que o IP deste servidor não está autorizado no painel da aplicação Meta
+      (<strong>Configurações do App &rarr; Segurança &rarr; Lista de IPs permitidos</strong>).<br><br>
+      <strong>Ação necessária:</strong> Acesse o <em>Meta for Developers</em>, localize o app associado ao token
+      e adicione o IP deste servidor (ou remova a restrição de IP) para que o agente automatizado
+      consiga buscar os dados nas próximas execuções.
+    </p>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- KPI GRID -->
+  <div class="section-title">Resumo do Dia — 28/04/2026</div>
+  <div class="kpi-grid">
+    <div class="kpi-card blue">
+      <div class="kpi-label">Gasto Total</div>
+      <div class="kpi-value nd">N/D</div>
+      <div class="kpi-sub">API indisponível</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Compras</div>
+      <div class="kpi-value nd">N/D</div>
+      <div class="kpi-sub">API indisponível</div>
+    </div>
+    <div class="kpi-card purple">
+      <div class="kpi-label">Receita</div>
+      <div class="kpi-value nd">N/D</div>
+      <div class="kpi-sub">API indisponível</div>
+    </div>
+    <div class="kpi-card orange">
+      <div class="kpi-label">ROAS Geral</div>
+      <div class="kpi-value nd">N/D</div>
+      <div class="kpi-sub">API indisponível</div>
+    </div>
+    <div class="kpi-card yellow">
+      <div class="kpi-label">CPA Médio</div>
+      <div class="kpi-value nd">N/D</div>
+      <div class="kpi-sub">API indisponível</div>
+    </div>
+  </div>
+
+  <!-- SALDO DISPONÍVEL -->
+  <div class="section-title">Saldo Disponível por Conta</div>
+  <div class="balance-list">
+    <div class="balance-row">
+      <div class="balance-dot" style="background:#1877f2"></div>
+      <div class="balance-name">Daimã Sushi</div>
+      <div class="balance-value">N/D</div>
+      <span class="balance-pill pill-nd">Indisponível</span>
+    </div>
+    <div class="balance-row">
+      <div class="balance-dot" style="background:#f59e0b"></div>
+      <div class="balance-name">FNP Farroupilha</div>
+      <div class="balance-value">N/D</div>
+      <span class="balance-pill pill-nd">Indisponível</span>
+    </div>
+    <div class="balance-row">
+      <div class="balance-dot" style="background:#10b981"></div>
+      <div class="balance-name">CA FNP Santiago</div>
+      <div class="balance-value">N/D</div>
+      <span class="balance-pill pill-nd">Indisponível</span>
+    </div>
+    <div class="balance-row">
+      <div class="balance-dot" style="background:#ec4899"></div>
+      <div class="balance-name">Sem Culpa Doceria</div>
+      <div class="balance-value">N/D</div>
+      <span class="balance-pill pill-nd">Indisponível</span>
+    </div>
+    <div class="balance-row">
+      <div class="balance-dot" style="background:#a855f7"></div>
+      <div class="balance-name">Look Sistemas</div>
+      <div class="balance-value">N/D</div>
+      <span class="balance-pill pill-nd">Indisponível</span>
+    </div>
+    <div class="balance-row">
+      <div class="balance-dot" style="background:#f97316"></div>
+      <div class="balance-name">Terraço Oliva</div>
+      <div class="balance-value">N/D</div>
+      <span class="balance-pill pill-nd">Indisponível</span>
+    </div>
+  </div>
+
+  <!-- ALERTS -->
+  <div class="section-title">Alertas &amp; Destaques</div>
+  <div class="alerts-grid">
+    <div class="alert-card warn">
+      <div class="alert-icon">&#128683;</div>
+      <h4>API Meta — Acesso Bloqueado</h4>
+      <p>Todas as chamadas retornaram <strong>HTTP 403 – Host not in allowlist</strong>. É necessário autorizar o IP do servidor nas configurações do app Meta Developer para retomar o relatório automatizado.</p>
+    </div>
+    <div class="alert-card info">
+      <div class="alert-icon">&#128274;</div>
+      <h4>Saldo das Contas Indisponível</h4>
+      <p>Sem acesso à API, não foi possível verificar o saldo de créditos pré-pagos. Monitore manualmente no Gerenciador de Anúncios para evitar interrupções em campanhas ativas.</p>
+    </div>
+    <div class="alert-card neutral">
+      <div class="alert-icon">&#128203;</div>
+      <h4>Próximos Passos</h4>
+      <p>1. Adicionar IP do servidor ao allowlist no Meta Developers. 2. Verificar validade do token de acesso. 3. Reexecutar o agente após liberação do IP.</p>
+    </div>
+  </div>
+
+  <!-- ACCOUNT CARDS -->
+  <div class="section-title">Desempenho por Conta</div>
+  <div class="account-grid">
+
+    <!-- Daimã Sushi -->
+    <div class="account-card">
+      <div class="account-card-header">
+        <div class="account-color-bar" style="background:#1877f2"></div>
+        <div>
+          <h3>Daimã Sushi</h3>
+          <p>ecommerce · act_1102412708528787</p>
+        </div>
+      </div>
+      <div class="account-metrics">
+        <div class="account-metric"><div class="lbl">Gasto</div><div class="val">N/D</div></div>
+        <div class="account-metric"><div class="lbl">Compras</div><div class="val">N/D</div></div>
+        <div class="account-metric"><div class="lbl">Receita</div><div class="val">N/D</div></div>
+        <div class="account-metric"><div class="lbl">ROAS</div><div class="val">N/D</div></div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="chart-daimasushi"></canvas>
+      </div>
+    </div>
+
+    <!-- FNP Farroupilha -->
+    <div class="account-card">
+      <div class="account-card-header">
+        <div class="account-color-bar" style="background:#f59e0b"></div>
+        <div>
+          <h3>FNP Farroupilha</h3>
+          <p>ecommerce · act_497165781973931</p>
+        </div>
+      </div>
+      <div class="account-metrics">
+        <div class="account-metric"><div class="lbl">Gasto</div><div class="val">N/D</div></div>
+        <div class="account-metric"><div class="lbl">Compras</div><div class="val">N/D</div></div>
+        <div class="account-metric"><div class="lbl">Receita</div><div class="val">N/D</div></div>
+        <div class="account-metric"><div class="lbl">ROAS</div><div class="val">N/D</div></div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="chart-fnpfarroupilha"></canvas>
+      </div>
+    </div>
+
+    <!-- CA FNP Santiago -->
+    <div class="account-card">
+      <div class="account-card-header">
+        <div class="account-color-bar" style="background:#10b981"></div>
+        <div>
+          <h3>CA FNP Santiago</h3>
+          <p>ecommerce · act_1189359459343770</p>
+        </div>
+      </div>
+      <div class="account-metrics">
+        <div class="account-metric"><div class="lbl">Gasto</div><div class="val">N/D</div></div>
+        <div class="account-metric"><div class="lbl">Compras</div><div class="val">N/D</div></div>
+        <div class="account-metric"><div class="lbl">Receita</div><div class="val">N/D</div></div>
+        <div class="account-metric"><div class="lbl">ROAS</div><div class="val">N/D</div></div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="chart-cafnpsantiago"></canvas>
+      </div>
+    </div>
+
+    <!-- Sem Culpa Doceria -->
+    <div class="account-card">
+      <div class="account-card-header">
+        <div class="account-color-bar" style="background:#ec4899"></div>
+        <div>
+          <h3>Sem Culpa Doceria</h3>
+          <p>ecommerce + mensagens · act_129546993826942</p>
+        </div>
+      </div>
+      <div class="account-metrics">
+        <div class="account-metric"><div class="lbl">Gasto</div><div class="val">N/D</div></div>
+        <div class="account-metric"><div class="lbl">Compras</div><div class="val">N/D</div></div>
+        <div class="account-metric"><div class="lbl">Conversas</div><div class="val">N/D</div></div>
+        <div class="account-metric"><div class="lbl">ROAS</div><div class="val">N/D</div></div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="chart-semculpa"></canvas>
+      </div>
+    </div>
+
+    <!-- Look Sistemas -->
+    <div class="account-card">
+      <div class="account-card-header">
+        <div class="account-color-bar" style="background:#a855f7"></div>
+        <div>
+          <h3>Look Sistemas</h3>
+          <p>mensagens + cliques · act_1539235268205217</p>
+        </div>
+      </div>
+      <div class="account-metrics">
+        <div class="account-metric"><div class="lbl">Gasto</div><div class="val">N/D</div></div>
+        <div class="account-metric"><div class="lbl">Resultados</div><div class="val">N/D</div></div>
+        <div class="account-metric"><div class="lbl">CPR</div><div class="val">N/D</div></div>
+        <div class="account-metric"><div class="lbl">Conversas</div><div class="val">N/D</div></div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="chart-looksistemas"></canvas>
+      </div>
+    </div>
+
+    <!-- Terraço Oliva -->
+    <div class="account-card">
+      <div class="account-card-header">
+        <div class="account-color-bar" style="background:#f97316"></div>
+        <div>
+          <h3>Terraço Oliva</h3>
+          <p>mensagens + cliques · act_809970745483387</p>
+        </div>
+      </div>
+      <div class="account-metrics">
+        <div class="account-metric"><div class="lbl">Gasto</div><div class="val">N/D</div></div>
+        <div class="account-metric"><div class="lbl">Resultados</div><div class="val">N/D</div></div>
+        <div class="account-metric"><div class="lbl">CPR</div><div class="val">N/D</div></div>
+        <div class="account-metric"><div class="lbl">Conversas</div><div class="val">N/D</div></div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="chart-terracooliva"></canvas>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CHARTS -->
+  <div class="section-title">Gráficos Consolidados</div>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3>ROAS por Conta (Ecommerce)</h3>
+      <div class="chart-wrap">
+        <canvas id="chart-roas-consolidado"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3>Distribuição de Compras</h3>
+      <div class="chart-wrap">
+        <canvas id="chart-compras-doughnut"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAMPAIGN TABLE -->
+  <div class="section-title">Tabela de Campanhas</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Campanha</th>
+          <th>Conta</th>
+          <th>Gasto</th>
+          <th>Compras / Resultados</th>
+          <th>Receita / Conversas</th>
+          <th>CPA / CPR</th>
+          <th>ROAS</th>
+          <th>CPC</th>
+          <th>Cliques</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="9" style="text-align:center; padding:32px; color:#475569; font-style:italic;">
+            Dados de campanhas indisponíveis — API Meta retornou erro 403 (Host not in allowlist)
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /container -->
+
+<!-- FOOTER -->
+<div class="footer">
+  Relatório gerado automaticamente por Claude · Facebook Ads Manager ·
+  <span>Data referência: 28/04/2026</span> ·
+  <span>Erro: API Meta — Host not in allowlist (HTTP 403)</span>
+</div>
+
+<script>
+// ── Helper: render empty "N/D" placeholder chart ──────────────────────────
+function ndChart(id, color, type) {
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  const isDoughnut = type === 'doughnut';
+  new Chart(ctx, {
+    type: type || 'bar',
+    data: {
+      labels: isDoughnut ? ['Sem dados'] : ['N/D'],
+      datasets: [{
+        data: isDoughnut ? [1] : [0],
+        backgroundColor: isDoughnut ? ['#1e293b'] : [color + '44'],
+        borderColor: isDoughnut ? ['#334155'] : [color],
+        borderWidth: 1,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: false },
+      },
+      scales: isDoughnut ? {} : {
+        x: { ticks: { color: '#475569', font: { size: 10 } }, grid: { color: '#1e293b' } },
+        y: { ticks: { color: '#475569', font: { size: 10 } }, grid: { color: '#1e293b' }, beginAtZero: true },
+      },
+    }
+  });
+}
+
+// Account mini charts
+ndChart('chart-daimasushi',     '#1877f2', 'bar');
+ndChart('chart-fnpfarroupilha', '#f59e0b', 'bar');
+ndChart('chart-cafnpsantiago',  '#10b981', 'bar');
+ndChart('chart-semculpa',       '#ec4899', 'bar');
+ndChart('chart-looksistemas',   '#a855f7', 'bar');
+ndChart('chart-terracooliva',   '#f97316', 'bar');
+
+// Consolidated charts
+ndChart('chart-roas-consolidado', '#3b82f6', 'bar');
+ndChart('chart-compras-doughnut', '#a855f7', 'doughnut');
+</script>
+
+</body>
+</html>
